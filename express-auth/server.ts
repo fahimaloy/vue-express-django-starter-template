@@ -16,10 +16,14 @@ app.use('/api', apiRouter);
  
 
 database.connect((err)=>{
-    if(err){
-        console.log(err)
-    };
+    if(!err){
         console.log("Database Connected...");
+    }
+    else{
+
+        console.log(err)
+    }
+    
 });
 
 
