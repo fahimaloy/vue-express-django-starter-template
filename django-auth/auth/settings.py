@@ -77,9 +77,9 @@ WSGI_APPLICATION = 'auth.wsgi.application'
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'yt_django_auth',
+#         'NAME': 'django_auth',
 #         'USER': 'root',
-#         'PASSWORD': 'rootroot'
+#         'PASSWORD': ''
 #     }
 # }
 DATABASES = {
