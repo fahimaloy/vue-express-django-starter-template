@@ -1,5 +1,6 @@
 const sqllogin = require("../db/index");
-
+const jwt = require('jsonwebtoken')
+require('dotenv')
 // constructor
 const User = function(user) {
   this.username = user.username;
@@ -10,16 +11,23 @@ const User = function(user) {
 
 User.login = (user, result) => {
   sqllogin.query(
-    "SELECT COUNT(*) AS logincount FROM users WHERE username = ? AND password = ?",
+    "SELECT * FROM users WHERE username = ? AND password = ?",
     [user.username,user.password],
     (err, res) => {
-        console.log(user.username)
+      try{
         if(!err){
-            let logc:number=res[0].logincount
-            if(logc!=0){
-
-                console.log("authentication: Successfull. Hello "+user.username+" .your details ar here", res);
-                result(null,user.username+" "+"You have successfully logged in" );
+          if(res.length == 1){
+              delete res[0].password
+                res[0].msg = "Authentication Successfull..... Congratulation "+res[0].fullname+" You have Successfully Logged in"            
+                const token = jwt.sign({
+                  username:res[0].username,
+                  id:res[0].id
+                },process.env.JWT_SECRET,
+                {
+                  expiresIn:'10h'
+                })
+                res[0].jwt = token
+                result(null,res);
             }
             else{
                 result(null , "wrong details")
@@ -30,6 +38,13 @@ User.login = (user, result) => {
           result(null, err);
           return;
         }
+      }
+      catch{
+          console.log(err);
+          let mssg:string ='Something Went Wrong'
+          result(null, mssg);
+          return;
+      }
     }
     
     

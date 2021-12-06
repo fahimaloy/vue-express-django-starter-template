@@ -23,10 +23,13 @@ router.get("/", tutorials.findAll);
 // router.get("/:id", tutorials.findOne);
 
 // Update a Tutorial with id
-router.put("/id/:id", tutorials.update);
+router.put("/id/", tutorials.update);
 
 // Delete a Tutorial with id
 router.delete("/id/:id", tutorials.delete);
 
+router.get("/logout",(req,res)=>{
+    res.clearCookie("jwt").send("You have Successfully Logged Out")
+})
 
 module.exports = router;

@@ -24,7 +24,10 @@ exports.login = (req, res) => {
             message:
             err.message || "Some error occurred while creating the User."
           });
-          else res.send(data);
+          else{ 
+            res.cookie('jwt', data[0].jwt).send(data);
+            // res.send(data)
+          };
         });
       }
 };

@@ -1,10 +1,10 @@
 import mysql from 'mysql'
-const dbConf = require('./db.conf.ts')
+require('dotenv').config()
 const db = mysql.createConnection({
-    host: dbConf.HOST,
-    user : dbConf.USER,
-    password: dbConf.PASS,
-    database:dbConf.DB
+    host: process.env.HOST,
+    user : process.env.USR,
+    password: process.env.PASS,
+    database: process.env.DB
 });
 
 
