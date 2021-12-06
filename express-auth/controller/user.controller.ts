@@ -1,6 +1,5 @@
 const Users = require('../models/user.model');
-const JWT = require('jsonwebtoken')
-require('dotenv')
+
 // Create and Save a new Tutorial
 exports.create = (req, res) => {
   // Validate request
@@ -54,54 +53,38 @@ exports.update = (req, res) => {
       message: "Content can not be empty!"
     });
   }
-  // Getting JWT from Cookies
-  let jwtToken: string = ''
-  let i: number
-  let cookies = req.headers.cookie.split('; ')
-  for (i = 0; i < cookies.length; i++) {
-    if (cookies[i].startsWith('jwt') != false) {
-      jwtToken = cookies[i].split('=')[1]
-    }
-  }
-  if (jwtToken != '') {
-    const jwtData = JWT.verify(jwtToken, process.env.JWT_SECRET)
-    const { username, id } = jwtData
 
-    // Hashing Password
-    let crypto = require('crypto');
-    let hash = crypto.createHash('md5').update(req.body.password).digest('hex');
 
-    const user = new Users({
-      username: req.body.username,
-      password: hash,
-      fullname: req.body.fullname
-    });
-    Users.updateById(
-      id,
-      new Users(user),
-      (err, data) => {
+  // Hashing Password
+  let crypto = require('crypto');
+  let hash = crypto.createHash('md5').update(req.body.password).digest('hex');
 
-        if (err) {
-          if (err.kind === "not_found") {
-            res.status(404).send({
-              message: `Not found User with id ${req.params.id}.`
-            });
-          } else {
-            res.status(500).send({
-              message: "Error updating User with id " + req.params.id
-            });
-          }
+  const user = new Users({
+    username: req.body.username,
+    password: hash,
+    fullname: req.body.fullname
+  });
+  Users.updateById(
+    req.id,
+    new Users(user),
+    (err, data) => {
+      console.log(req.id)
+      if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found User with id ${req.params.id}.`
+          });
         } else {
+          res.status(500).send({
+            message: "Error updating User with id " + req.params.id
+          });
+        }
+      } else {
 
-          res.send(data)
-        };
-      }
-    );
-  }
-  else{
-    console.log('Not authenticated')
-    res.send("Not Authenticated")
-  }
+        res.send(data)
+      };
+    }
+  );
 
 };
 

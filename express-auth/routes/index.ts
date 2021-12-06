@@ -8,7 +8,7 @@
 const tutorials = require("../controller/user.controller");
 const loginController = require("../controller/login-controller")
 const router = require("express").Router();
-
+const isAuth = require('../controller/isAuthenticated.controller')
 router.post("/login", loginController.login);
 // Create a new Tutorial
 router.post("/", tutorials.create);
@@ -23,7 +23,7 @@ router.get("/", tutorials.findAll);
 // router.get("/:id", tutorials.findOne);
 
 // Update a Tutorial with id
-router.put("/id/", tutorials.update);
+router.put("/id/", isAuth ,tutorials.update);
 
 // Delete a Tutorial with id
 router.delete("/id/:id", tutorials.delete);
