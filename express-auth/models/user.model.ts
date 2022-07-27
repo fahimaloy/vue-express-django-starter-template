@@ -5,6 +5,7 @@ const User = function(user) {
   this.username = user.username;
   this.password = user.password;
   this.fullname = user.fullname;
+  this.user_type = user.user_type;
 };
 
 User.create = (newUser, result) => {
@@ -58,18 +59,6 @@ User.getAll = (fullname, result) => {
   });
 };
 
-// User.getAllPublished = result => {
-//   sql.query("SELECT * FROM user WHERE published=true", (err, res) => {
-//     if (err) {
-//       console.log("error: ", err);
-//       result(null, err);
-//       return;
-//     }
-
-//     console.log("tutorials: ", res);
-//     result(null, res);
-//   });
-// };
 
 User.updateById = (id, user, result) => {
   sql.query(
@@ -95,7 +84,7 @@ User.updateById = (id, user, result) => {
 };
 
 User.remove = (id, result) => {
-  sql.query("DELETE FROM user WHERE id = ?", id, (err, res) => {
+  sql.query("DELETE FROM users WHERE id = ?", id, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -113,17 +102,29 @@ User.remove = (id, result) => {
   });
 };
 
-// Tutorial.removeAll = result => {
-//   sql.query("DELETE FROM tutorials", (err, res) => {
-//     if (err) {
-//       console.log("error: ", err);
-//       result(null, err);
-//       return;
-//     }
+User.removeAll = result => {
+  sql.query("DELETE FROM users", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
 
-//     console.log(`deleted ${res.affectedRows} tutorials`);
-//     result(null, res);
-//   });
-// };
-
+    console.log(`Succesfully Deleted ${res.affectedRows} Users`);
+    result(null, res);
+  });
+};
+User.usernameExists = (username,result)=>{
+  sql.query(`SELECT * FROM users WHERE username = ${username}`,(err,res)=>{
+    if(err){
+      result(null,err)
+      return
+    }
+    else if(res.length){
+      result(true,null)
+    }else {
+      result(false,null)
+    }
+  })
+}
 module.exports = User;

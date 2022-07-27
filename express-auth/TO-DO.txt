@@ -1,0 +1,8 @@
+1)Creating Controllers :
+    a) Find
+    b) Get
+    c) Delete
+    d) Exists
+    e) isContains
+    f) StartsWith
+    g) Between

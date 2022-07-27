@@ -1,3 +1,5 @@
+import { hashPwd } from "./hashingPass";
+
 const UsersLogin = require('../models/login.model');
 
 // Create and Save a new Tutorial
@@ -9,12 +11,11 @@ exports.login = (req, res) => {
         });
       }
       else{
-        let crypto = require('crypto');
-        let hash = crypto.createHash('md5').update(req.body.password).digest('hex');
+        let hashedPass = hashPwd(req.body.password)
         // Create a User
         const user = new UsersLogin({
           username: req.body.username,
-          password: hash,
+          password: hashedPass,
         });
         
         // Save Tutorial in the database

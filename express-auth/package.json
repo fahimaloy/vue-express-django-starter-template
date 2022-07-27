@@ -9,14 +9,15 @@
   "author": "Fahim Ahmed",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.6",
-    "crypto": "^1.0.1",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
-    "package.json": "^2.0.1"
+    "package.json": "^0.0.0"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^8.5.6",

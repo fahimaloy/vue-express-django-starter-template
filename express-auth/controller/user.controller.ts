@@ -1,3 +1,5 @@
+import { hashPwd } from "./hashingPass";
+
 const Users = require('../models/user.model');
 
 // Create and Save a new Tutorial
@@ -9,28 +11,40 @@ exports.create = (req, res) => {
     });
   }
   else {
-    let crypto = require('crypto');
-    let hash = crypto.createHash('md5').update(req.body.password).digest('hex');
-    console.log(req.body)
+    let hashedPass = hashPwd(req.body.password)
     // Create a User
     const user = new Users({
       username: req.body.username,
-      password: hash,
-      fullname: req.body.fullname
+      password: hashedPass,
+      fullname: req.body.fullname,
+      user_type:req.body.user_type
     });
-
-    // Save Tutorial in the database
-    Users.create(user, (err, data) => {
-      if (err)
+    Users.usernameExists(user.username,(err,data)=>{
+      if(err){
         res.status(500).send({
           message:
-            err.message || "Some error occurred while creating the User."
+            err.message || "Something Happened While Checking Username"
         });
-      else res.send(data);
-    });
-  }
-};
+      }else if(data){
+        res.send({
+          message:
+            `The Username: ${user.username} already exists.Try something Different`
+        });
+      }else if(!data){
 
+        Users.create(user, (err, data) => {
+          if (err)
+            res.status(500).send({
+              message:
+                err.message || "Some error occurred while creating the User."
+            });
+          else res.send(data);
+        });
+      }
+      })
+  }
+
+}
 // Retrieve all Tutorials from the database (with condition).
 exports.findAll = (req, res) => {
   const fullname = req.query.fullname;
@@ -55,13 +69,10 @@ exports.update = (req, res) => {
   }
 
 
-  // Hashing Password
-  let crypto = require('crypto');
-  let hash = crypto.createHash('md5').update(req.body.password).digest('hex');
-
+  let hashedPass = hashPwd(req.body.password)
   const user = new Users({
     username: req.body.username,
-    password: hash,
+    password: hashedPass,
     fullname: req.body.fullname
   });
   Users.updateById(

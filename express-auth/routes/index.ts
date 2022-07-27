@@ -4,32 +4,26 @@
 // router.get('/',(req,res,next) => {
 //     res.json({test:"test"});
 // });
-
-const tutorials = require("../controller/user.controller");
+const migrate = require("../db/migration")
+const user = require("../controller/user.controller");
 const loginController = require("../controller/login-controller")
 const router = require("express").Router();
 const isAuth = require('../controller/isAuthenticated.controller')
 router.post("/login", loginController.login);
 // Create a new Tutorial
-router.post("/", tutorials.create);
+router.post("/register", user.create);
 
-// Retrieve all Tutorials
-router.get("/", tutorials.findAll);
+// Retrieve all user
+router.get("/", user.findAll);
 
-// Retrieve all published Tutorials
-// router.get("/published", tutorials.findAllPublished);
 
-// Retrieve a single Tutorial with id
-// router.get("/:id", tutorials.findOne);
+router.put("/id/", isAuth ,user.update);
 
-// Update a Tutorial with id
-router.put("/id/", isAuth ,tutorials.update);
-
-// Delete a Tutorial with id
-router.delete("/id/:id", tutorials.delete);
+router.delete("/id/:id", user.delete);
 
 router.get("/logout",(req,res)=>{
     res.clearCookie("jwt").send("You have Successfully Logged Out")
 })
-
+router.post("/migrate_table", migrate.create_table);
+router.delete("/migrate_table", migrate.delete_table);
 module.exports = router;
